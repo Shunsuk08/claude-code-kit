@@ -56,6 +56,12 @@ pdftotext -layout /path/to/file.pdf - | head -40
 - Pythonライブラリ（PyMuPDF等）が必要な場合、system python3に入っている前提で書かない。`pip install` がPEP 668で拒否される環境では `uv run --with <パッケージ> python - <<'PY' ... PY` で一時環境を作る。
 - **スキャンPDF**（手書き赤入れ等、テキストレイヤーが無いもの）は `mutool draw -r 150 -o p%02d.png <file>.pdf` で全ページPNG化してReadで画像読解する。
 
+## 動画（YouTube）を教材の出典にする
+
+- 字幕は `uv run --with yt-dlp yt-dlp --skip-download --write-auto-sub --sub-lang ja --sub-format vtt -o out "<URL>"` で取る。curl・WebFetchで字幕APIを直接叩くと、HTTP 200でも中身が空になる。
+- 自動字幕（ASR）は**専門用語ほど誤変換する**（実例：「推移的依存」→「水移的依存」、「Java」→「Jab」）。字幕から拾った用語・数値は、教材に書く前に公式ドキュメントや一般的な表記と照合する。
+- X（Twitter）はWebFetchで402になり読めない。本人に画像・本文を貼ってもらう。
+
 ## アンチパターン
 
 - ❌ Desktop / Downloadsの元ファイルを直接編集（バックアップなし）
@@ -63,3 +69,4 @@ pdftotext -layout /path/to/file.pdf - | head -40
 - ❌ ファイルパスをPythonリテラルに直書き（U+2019でSyntaxError）
 - ❌ Excel一時ロックファイル `~$*.xlsx` をコピー（中身は空）
 - ❌ 数字・固有名詞を含むPDFを画像読み取りだけで断定
+- ❌ 動画の自動字幕の用語を照合せずに教材へ転記
